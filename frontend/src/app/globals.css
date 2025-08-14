@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.75rem;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-md bg-brand px-4 py-2 text-white hover:bg-brand-dark transition;
+}
+
+.card {
+  @apply rounded-lg bg-white shadow-sm border border-gray-200;
+}

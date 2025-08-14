@@ -1,0 +1,23 @@
+{
+  "name": "startup-match-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -c blue,green -n frontend,backend \"npm --workspace frontend run dev\" \"npm --workspace backend run dev\"",
+    "build": "npm --workspace frontend run build && npm --workspace backend run build",
+    "start": "concurrently -c blue,green -n frontend,backend \"npm --workspace frontend run start\" \"npm --workspace backend run start\"",
+    "db:push": "npm --workspace backend run db:push",
+    "db:studio": "npm --workspace backend run db:studio",
+    "postinstall": "npm --workspace backend run prisma:generate"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
