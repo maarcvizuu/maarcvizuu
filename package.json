@@ -1,0 +1,16 @@
+{
+  "name": "startup-match-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run -w api dev & npm run -w web dev",
+    "build": "npm run -w api build && npm run -w web build",
+    "start": "npm run -w api start & npm run -w web start",
+    "postinstall": "npm run -w api prisma:generate"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}
