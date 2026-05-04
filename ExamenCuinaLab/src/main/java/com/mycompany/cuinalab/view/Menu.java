@@ -2,10 +2,6 @@ package com.mycompany.cuinalab.view;
 
 import com.mycompany.cuinalab.controller.GestorEscola;
 import com.mycompany.cuinalab.exception.CuinaLabException;
-import com.mycompany.cuinalab.model.Alumne;
-import com.mycompany.cuinalab.model.Curs;
-import com.mycompany.cuinalab.model.CursOnline;
-import com.mycompany.cuinalab.model.CursPresencial;
 import com.mycompany.cuinalab.model.enums.DiaSetmana;
 import com.mycompany.cuinalab.model.enums.Plataforma;
 import com.mycompany.cuinalab.model.enums.TipusCurs;
@@ -85,11 +81,10 @@ public class Menu {
         String codi = demanarCodiCurs();
         String nom = ask.askString("Nom: ");
         int places = ask.askInt("Capacitat: ", "Les places han d'estar entre 5 i 20.", 5, 20);
-        double preu = ask.askDoublePositive("Preu: ", "El preu ha de ser un nombre positiu.");
+        double preu = ask.askDouble("Preu: ", "El preu ha de ser un nombre positiu.", 0.01);
         TipusCurs tipus = demanarTipusCurs();
         int sessions = ask.askInt("Sessions: ", "Les sessions han d'estar entre 1 i 12.", 1, 12);
 
-        Curs nouCurs;
         if (tipus == TipusCurs.PRESENCIAL) {
             String aula = ask.askString("Aula: ");
             boolean inclouMaterial = ask.askBoolean(
@@ -97,12 +92,11 @@ public class Menu {
                     "Has d'introduir 's' o 'n'.",
                     "s", "n");
             DiaSetmana dia = demanarDiaSetmana();
-            nouCurs = new CursPresencial(codi, nom, places, preu, sessions, aula, dia, inclouMaterial);
+            gestor.registrarCursPresencial(codi, nom, places, preu, sessions, aula, dia, inclouMaterial);
         } else {
             Plataforma plataforma = demanarPlataforma();
-            nouCurs = new CursOnline(codi, nom, places, preu, sessions, plataforma);
+            gestor.registrarCursOnline(codi, nom, places, preu, sessions, plataforma);
         }
-        gestor.registrarCurs(nouCurs);
         System.out.println("Curs registrat.");
     }
 
@@ -197,7 +191,7 @@ public class Menu {
         String nom = ask.askString("Nom: ");
         String cognoms = ask.askString("Cognoms: ");
         int edat = ask.askInt("Edat: ", "L'edat ha d'estar entre 16 i 99.", 16, 99);
-        gestor.registrarAlumne(new Alumne(dni, nom, cognoms, edat));
+        gestor.registrarAlumne(dni, nom, cognoms, edat);
         System.out.println("Alumne registrat.");
     }
 

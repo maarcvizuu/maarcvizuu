@@ -3,6 +3,10 @@ package com.mycompany.cuinalab.controller;
 import com.mycompany.cuinalab.exception.CuinaLabException;
 import com.mycompany.cuinalab.model.Alumne;
 import com.mycompany.cuinalab.model.Curs;
+import com.mycompany.cuinalab.model.CursOnline;
+import com.mycompany.cuinalab.model.CursPresencial;
+import com.mycompany.cuinalab.model.enums.DiaSetmana;
+import com.mycompany.cuinalab.model.enums.Plataforma;
 import com.mycompany.cuinalab.persistence.FicheroCuinaLab;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,17 +42,19 @@ public class GestorEscola {
     private FicheroCuinaLab fichero;
 
     /**
-     * Inicialitza les estructures i carrega els alumnes del fitxer students.txt
-     * si existeix. Si no existeix, comença l'aplicació buida sense donar error.
+     * Inicialitza fitxer i llegeix els alumnes del fitxer students.txt.
+     *
+     * Si el fitxer no existeix o hi ha algun error de lectura, l'aplicació
+     * comença buida sense donar error.
      */
     public GestorEscola() {
-        cursos = new HashMap<>();
-        alumnes = new HashMap<>();
         fichero = new FicheroCuinaLab();
+        cursos = new HashMap<>();
         try {
+            // Llegim alumnes del fitxer students.txt
             alumnes = fichero.readAlumnesFile();
         } catch (IOException ex) {
-            // No hauria de donar-se: si hi ha error de lectura comencem buit.
+            // No hauria de donar-se. Si hi ha error inicialitzem alumnes buits.
             alumnes = new HashMap<>();
         }
     }
@@ -56,16 +62,37 @@ public class GestorEscola {
     // ─── CURSOS ────────────────────────────────────────────────────────────────
 
     /**
-     * Registra un curs nou a l'escola.
+     * Registra un curs presencial nou a l'escola.
      *
-     * @param curs el curs a registrar (ja construït)
-     * @throws CuinaLabException si ja existeix un curs amb el mateix codi
+     * Comprova que no existeixi cap curs amb el mateix codi i, si tot és correcte,
+     * crea la instància de CursPresencial i la guarda al registre.
+     *
+     * @throws CuinaLabException si ja existeix un curs amb el codi o si les dades no són vàlides
      */
-    public void registrarCurs(Curs curs) throws CuinaLabException {
-        if (cursos.containsKey(curs.getCodi())) {
+    public void registrarCursPresencial(String codi, String nom, int placesMaximes, double preu,
+                                        int sessions, String aula, DiaSetmana dia,
+                                        boolean inclouMaterial) throws CuinaLabException {
+        String codiUpper = codi.toUpperCase();
+        if (cursos.containsKey(codiUpper)) {
             throw new CuinaLabException("Ja existeix un curs amb el codi indicat.");
         }
-        cursos.put(curs.getCodi(), curs);
+        Curs nou = new CursPresencial(codiUpper, nom, placesMaximes, preu, sessions, aula, dia, inclouMaterial);
+        cursos.put(nou.getCodi(), nou);
+    }
+
+    /**
+     * Registra un curs online nou a l'escola.
+     *
+     * @throws CuinaLabException si ja existeix un curs amb el codi o si les dades no són vàlides
+     */
+    public void registrarCursOnline(String codi, String nom, int placesMaximes, double preu,
+                                    int sessions, Plataforma plataforma) throws CuinaLabException {
+        String codiUpper = codi.toUpperCase();
+        if (cursos.containsKey(codiUpper)) {
+            throw new CuinaLabException("Ja existeix un curs amb el codi indicat.");
+        }
+        Curs nou = new CursOnline(codiUpper, nom, placesMaximes, preu, sessions, plataforma);
+        cursos.put(nou.getCodi(), nou);
     }
 
     // ─── ALUMNES ───────────────────────────────────────────────────────────────
@@ -73,14 +100,14 @@ public class GestorEscola {
     /**
      * Registra un alumne nou a l'escola.
      *
-     * @param alumne l'alumne a registrar
      * @throws CuinaLabException si ja existeix un alumne amb el mateix DNI
      */
-    public void registrarAlumne(Alumne alumne) throws CuinaLabException {
-        if (alumnes.containsKey(alumne.getDni())) {
+    public void registrarAlumne(String dni, String nom, String cognoms, int edat) throws CuinaLabException {
+        String dniUpper = dni.toUpperCase();
+        if (alumnes.containsKey(dniUpper)) {
             throw new CuinaLabException("Ja existeix un alumne amb el DNI indicat.");
         }
-        alumnes.put(alumne.getDni(), alumne);
+        alumnes.put(dniUpper, new Alumne(dniUpper, nom, cognoms, edat));
     }
 
     // ─── INSCRIPCIONS ──────────────────────────────────────────────────────────

@@ -37,6 +37,17 @@ public class AskData {
         return n;
     }
 
+    public int askInt(String message, String errorMessage, int min) throws IOException {
+        int n;
+        do {
+            n = askInt(message);
+            if (n < min) {
+                System.out.println(errorMessage);
+            }
+        } while (n < min);
+        return n;
+    }
+
     public int askInt(String message, String errorMessage, int min, int max) throws IOException {
         int n;
         do {
@@ -66,14 +77,14 @@ public class AskData {
         return n;
     }
 
-    public double askDoublePositive(String message, String errorMessage) throws IOException {
+    public double askDouble(String message, String errorMessage, double min) throws IOException {
         double n;
         do {
             n = askDouble(message);
-            if (n <= 0) {
+            if (n < min) {
                 System.out.println(errorMessage);
             }
-        } while (n <= 0);
+        } while (n < min);
         return n;
     }
 
