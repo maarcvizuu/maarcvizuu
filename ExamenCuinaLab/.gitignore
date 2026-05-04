@@ -1,0 +1,9 @@
+target/
+*.class
+nbproject/private/
+.nb-gradle/
+.idea/
+*.iml
+build/
+out/
+.DS_Store
